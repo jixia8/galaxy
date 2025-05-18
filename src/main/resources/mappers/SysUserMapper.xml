@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.galaxy.mapper.SysUserMapper">
+    <resultMap id="SysUserMap" type="com.example.galaxy.entity.SysUser">
+        <id property="userId" column="user_id"/>
+        <id property="userAccount" column="user_account"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="accountNonExpired" column="is_account_non_expired"/>
+        <result property="accountNonLocked" column="is_account_non_locked"/>
+        <result property="credentialsNonExpired" column="is_credentials_non_expired"/>
+        <result property="enabled" column="is_enabled"/>
+        <result property="userName" column="user_name"/>
+    </resultMap>
+    <!--复用语句-->
+    <sql id="insert_columns">
+        user_account, user_password, user_email, is_account_non_expired,
+    is_account_non_locked, is_credentials_non_expired, is_enabled,
+    user_name
+    </sql>
+    <!-- 复用对应值 -->
+    <sql id="insert_values">
+        #{userAccount}, #{userPassword}, #{userEmail}, #{accountNonExpired},
+        #{accountNonLocked}, #{credentialsNonExpired}, #{enabled},
+        #{userName}
+    </sql>
+
+    <!-- 插入语句 -->
+    <insert id="insertUser" parameterType="com.example.galaxy.entity.SysUser">
+        insert into sys_user (
+        <include refid="insert_columns" />
+        ) values (
+        <include refid="insert_values" />
+        )
+    </insert>
+
+    <!--删除语句"id"-->
+    <delete id="deleteUserById" parameterType="long">
+        delete
+        from sys_user
+        where user_id = #{userId}
+    </delete>
+    <!--删除语句"account"-->
+    <delete id="deleteUserByAccount" parameterType="string">
+        delete
+        from sys_user
+        where user_account = #{userAccount}
+    </delete>
+
+    <!--根据用户id或账号“查”-->
+    <select id="getUserById" resultMap="SysUserMap" parameterType="long">
+        select *
+        from sys_user
+        where user_id = #{userId}
+    </select>
+
+    <select id="getUserByAccount" resultMap="SysUserMap" parameterType="string">
+        select *
+        from sys_user
+        where user_account = #{userAccount}
+    </select>
+
+    <!--更改语句 动态更新非null属性-->
+    <update id="updateUserByIdSelective" parameterType="com.example.galaxy.entity.SysUser">
+        update sys_user
+        <set>
+            <if test="userAccount != null">user_account = #{userAccount},</if>
+            <if test="userPassword != null">user_password = #{userPassword},</if>
+            <if test="userEmail != null">user_email = #{userEmail},</if>
+            <if test="accountNonExpired != null">is_account_non_expired = #{accountNonExpired},</if>
+            <if test="accountNonLocked != null">is_account_non_locked = #{accountNonLocked},</if>
+            <if test="credentialsNonExpired != null">is_credentials_non_expired = #{credentialsNonExpired},</if>
+            <if test="enabled != null">is_enabled = #{enabled},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateUserByAccountSelective" parameterType="com.example.galaxy.entity.SysUser">
+        update sys_user
+        <set>
+            <if test="userAccount != null">user_account = #{userAccount},</if>
+            <if test="userPassword != null">user_password = #{userPassword},</if>
+            <if test="userEmail != null">user_email = #{userEmail},</if>
+            <if test="accountNonExpired != null">is_account_non_expired = #{accountNonExpired},</if>
+            <if test="accountNonLocked != null">is_account_non_locked = #{accountNonLocked},</if>
+            <if test="credentialsNonExpired != null">is_credentials_non_expired = #{credentialsNonExpired},</if>
+            <if test="enabled != null">is_enabled = #{enabled},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+        </set>
+        where user_account = #{userAccount}
+    </update>
+
+    <!--获取所有用户-->
+    <select id="getAllSysUser" resultMap="SysUserMap">
+         select *
+         from sys_user
+    </select>
+</mapper>

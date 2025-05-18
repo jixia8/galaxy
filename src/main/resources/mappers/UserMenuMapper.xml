@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.galaxy.mapper.UserMenuMapper">
+    <resultMap id="BaseResultMap" type="com.example.galaxy.entity.UserMenu">
+        <id property="userMenuId" column="user_menu_id"/>
+        <id property="userMenuPath" column="user_menu_path"/>
+        <id property="userMenuComponent" column="user_menu_component"/>
+        <result property="userMenuName" column="user_menu_name"/>
+        <result property="userMenuIcon" column="user_menu_icon"/>
+        <result property="parentId" column="parent_id"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+        user_menu_id, user_menu_name, user_menu_component, user_menu_icon,user_menu_path, parent_id
+    </sql>
+
+    <sql id="base_property_list">
+        #{userMenuId}, #{userMenuName}, #{userMenuComponent}, #{userMenuIcon}, #{userMenuPath}, #{parentId}
+    </sql>
+
+    <select id="getUserMenuById" parameterType="long" resultType="com.example.galaxy.entity.UserMenu">
+        select
+            <include refid="base_column_list"/>
+        from
+            user_menu
+        where
+            user_menu_id = #{userMenuId}
+    </select>
+
+    <select id="getAllUserMenu" resultType="com.example.galaxy.entity.UserMenu">
+        select
+            <include refid="base_column_list"/>
+        from
+            user_menu
+    </select>
+
+    <insert id="insertUserMenu" parameterType="com.example.galaxy.entity.UserMenu">
+        INSERT INTO user_menu (user_menu_name, user_menu_path, user_menu_component, user_menu_icon, parent_id)
+        VALUES (#{userMenuName}, #{userMenuPath}, #{userMenuComponent}, #{userMenuIcon}, #{parentId})
+    </insert>
+
+    <update id="updateUserMenu" parameterType="com.example.galaxy.entity.UserMenu">
+        UPDATE user_menu
+        <set>
+            <if test="userMenuName != null">user_menu_name = #{userMenuName},</if>
+            <if test="userMenuPath != null">user_menu_path = #{userMenuPath},</if>
+            <if test="userMenuComponent != null">user_menu_component = #{userMenuComponent},</if>
+            <if test="userMenuIcon != null">user_menu_icon = #{userMenuIcon},</if>
+            <if test="parentId != null">parent_id = #{parentId}</if>
+        </set>
+        WHERE user_menu_id = #{userMenuId}
+    </update>
+
+    <delete id="deleteUserMenuById" parameterType="long">
+        DELETE FROM user_menu WHERE user_menu_id = #{userMenuId}
+    </delete>
+</mapper>

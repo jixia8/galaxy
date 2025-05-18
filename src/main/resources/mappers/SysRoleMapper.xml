@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.galaxy.mapper.SysRoleMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="SysRoleMapper" type="com.example.galaxy.entity.SysRole">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleDescription" column="role_description"/>
+    </resultMap>
+
+    <!-- 查询：根据ID -->
+    <select id="selectRoleById" parameterType="long" resultMap="SysRoleMapper">
+        SELECT role_id, role_name, role_description
+        FROM sys_role
+        WHERE role_id = #{roleId}
+    </select>
+
+    <!-- 查询：所有角色 -->
+    <select id="selectAllRoles" resultMap="SysRoleMapper">
+        SELECT role_id, role_name, role_description
+        FROM sys_role
+    </select>
+
+    <!-- 插入 -->
+    <insert id="insertRole" parameterType="com.example.galaxy.entity.SysRole" useGeneratedKeys="true" keyProperty="roleId">
+        INSERT INTO sys_role (role_name, role_description)
+        VALUES (#{roleName}, #{roleDescription})
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateRole" parameterType="com.example.galaxy.entity.SysRole">
+        UPDATE sys_role
+        <set>
+            <if test="roleName != null">role_name = #{roleName},</if>
+            <if test="roleDescription != null">role_description = #{roleDescription},</if>
+        </set>
+        WHERE role_id = #{roleId}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteRoleById" parameterType="long">
+        DELETE FROM sys_role
+        WHERE role_id = #{roleId}
+    </delete>
+
+</mapper>

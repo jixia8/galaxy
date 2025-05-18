@@ -1,0 +1,23 @@
+
+com.example.project
+├── controller              # 控制器层，处理请求
+│   └── UserController.java
+│
+├── Utils                   # 存放复用的工具类
+│
+├── service                 # 业务逻辑层
+│   └── UserService.java
+├── repository              # 数据访问层
+│   └── UserRepository.java
+├── entity                  # 数据实体类
+│   └── User.java
+├── dto                     # 数据传输对象
+│   └── UserDTO.java
+├── config                  # 配置类（如 WebSecurityConfigurer）
+│   └── WebSecurityConfigurer.java
+├── security                # 权限相关处理
+│   ├── filter              # Token过滤器、自定义登录过滤器
+│   ├── handler             # 登录成功/失败处理器，权限异常处理器
+│   ├── entrypoint          # 认证入口点处理器
+│   └── util                # JWT 工具类等
+└── Application.java

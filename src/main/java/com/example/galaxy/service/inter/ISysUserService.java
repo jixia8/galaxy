@@ -9,6 +9,16 @@ import com.example.galaxy.entity.UserMenu;
 import java.util.List;
 public interface  ISysUserService {
 
+    /**
+     * 根据账号修改用户信息
+     */
+    int updateUserByAccount(SysUser sysUser);
+    /**
+     * 根据账号查询用户
+     *
+     * @param account 账号
+     * @return SysUser
+     */
     SysUser getUserByAccount(String account);
 
     /**

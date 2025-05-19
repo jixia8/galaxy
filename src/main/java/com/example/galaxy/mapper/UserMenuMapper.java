@@ -1,6 +1,7 @@
 package com.example.galaxy.mapper;
 
 import com.example.galaxy.entity.UserMenu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface UserMenuMapper {
     int insertUserMenu(UserMenu userMenu);
     int updateUserMenu(UserMenu userMenu);
     int deleteUserMenuById(Long userMenuId);
+    List<UserMenu> getMenusByPermissionIds( Long permissionId);
 }

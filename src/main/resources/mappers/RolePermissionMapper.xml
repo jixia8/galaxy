@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.galaxy.mapper.RolePermissionMapper">
-    <resultMap id="RolePermissionMapper" type="com.example.galaxy.entity.RolePermission">
+    <resultMap id="RolePermissionMap" type="com.example.galaxy.entity.RolePermission">
         <id property="roleId" column="role_id"/>
         <id property="permissionId" column="permission_id"/>
     </resultMap>

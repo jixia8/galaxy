@@ -1,9 +1,12 @@
 package com.example.galaxy.common.utils;
 
+
+import com.sun.org.slf4j.internal.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -53,18 +56,20 @@ public class RedisUtilsImpl implements RedisUtils {
             return false;
         }
     }
+
     /**
      * 删除缓存
      */
     public boolean delete(String key) {
+        if (!StringUtils.hasText(key)) {
+            return false; // 如果 key 为空或仅包含空白字符，直接返回 false
+        }
         try {
-            if (key != null) {
-                redisTemplate.delete(key);
-                return true;
-            }
-            return false;
+            redisTemplate.delete(key);
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            // 使用日志记录异常
+            LoggerFactory.getLogger(RedisUtilsImpl.class).error("Failed to delete key: {}", key, e);
             return false;
         }
     }

@@ -1,8 +1,7 @@
 package com.example.galaxy.common.utils;
 
-import org.springframework.stereotype.Component;
 
-@Component
+
 public interface RedisUtils {
     Object get(String key);
     boolean set(String key, Object value, long time);

@@ -1,15 +1,20 @@
 //jwt工具类
 package com.example.galaxy.common.utils;
-import com.example.galaxy.entity.AuthUser;
+
+import com.example.galaxy.security.service.impl.AuthUserDetails;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.galaxy.common.Constants.TOKEN_KEY;
 
 /**
  * JWT生成令牌、验证令牌、获取令牌
@@ -22,7 +27,8 @@ public class JwtTokenUtilsImpl implements JwtTokenUtils {
 
     // 过期时间 毫秒,设置默认12个小时过期
     private static final long EXPIRATION_TIME = 3600000L * 12;
-
+    @Autowired
+    private RedisUtils redisUtils;
     /**
      * 生成令牌
      *
@@ -96,11 +102,18 @@ public class JwtTokenUtilsImpl implements JwtTokenUtils {
      */
     @Override
     public Boolean validateToken(String token, UserDetails userDetails) throws Exception {
-        AuthUser user = (AuthUser) userDetails;
+        AuthUserDetails user = (AuthUserDetails) userDetails;
         String username = getUsernameFromToken(token);
+
+        // 检查 Redis 中是否存在该令牌
+        String redisKey = TOKEN_KEY + username;
+        String redisToken = redisUtils.get(redisKey).toString();
+        if (redisToken == null || !redisToken.equals(token)) {
+            return false; // Redis 中不存在或令牌不匹配
+        }
+
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
-
     /**
      * 从数据声明生成令牌
      *

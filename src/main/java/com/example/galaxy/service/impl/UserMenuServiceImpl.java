@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,19 +23,18 @@ public class UserMenuServiceImpl implements UserMenuService {
         this.iSysUserService = iSysUserService;
     }
 
+    @Override
     public List<UserMenu> getMenusByUserAccount(String userAccount) {
-        List<String> userPermissions= new ArrayList<>();
-        for (SysPermission permission : iSysUserService.getPermissionsByUserAccount(userAccount)) {
-            userPermissions.add(permission.getPermissionUrl());
-        }
-        // 查询所有菜单
-        List<UserMenu> allMenus = userMenuMapper.getAllUserMenu();
-        // 根据权限过滤菜单
-        return allMenus.stream()
-                .filter(menu -> userPermissions.contains(menu.getUserMenuPath())) // 假设权限与菜单路径关联
+        // 获取用户权限 ID 并转为 Set
+        Set<Long> userPermissions = iSysUserService.getPermissionsByUserAccount(userAccount).stream()
+                .map(SysPermission::getPermissionId)
+                .collect(Collectors.toSet());
+
+        // 在数据库中直接过滤出用户有权限的菜单
+        return userPermissions.stream()
+                .flatMap(permissionId -> userMenuMapper.getMenusByPermissionIds(permissionId).stream())
                 .collect(Collectors.toList());
     }
-
     @Override
     public int addUserMenu(UserMenu userMenu) {
         return userMenuMapper.insertUserMenu(userMenu);

@@ -44,23 +44,21 @@ public class SecurAuthenticationSuccessHandler extends JSONAuthentication implem
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-
+//
         Object principal = authentication.getPrincipal();
         if (!(principal instanceof AuthUserDetails)) {
             log.error("Principal 类型错误: {}", principal.getClass().getName());
             this.WriteJSON(request, response, R.failed("认证信息错误"));
             return;
         }
-
         AuthUserDetails authUserDetails = (AuthUserDetails) principal;
         String username = authUserDetails.getUsername();
 
         // 安全上下文设置认证信息
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String redisKey = TOKEN_KEY + username;
         String token = Optional.ofNullable(redisUtils.get(redisKey)).map(Object::toString).orElse("");
-
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         if (token.isEmpty()) {
             log.info("初次登录，生成新 token...");
             token = jwtTokenUtils.generateToken(authUserDetails);

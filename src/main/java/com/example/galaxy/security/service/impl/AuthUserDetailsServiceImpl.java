@@ -17,7 +17,7 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService {
     private ISysUserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public AuthUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUser sysUser = userService.getUserByAccount(username);
         if (sysUser == null) {
             throw new UsernameNotFoundException("用户不存在");

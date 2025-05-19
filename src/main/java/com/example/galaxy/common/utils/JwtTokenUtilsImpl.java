@@ -1,6 +1,7 @@
 //jwt工具类
 package com.example.galaxy.common.utils;
-import com.example.galaxy.entity.AuthUser;
+
+import com.example.galaxy.security.service.impl.AuthUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -96,7 +97,7 @@ public class JwtTokenUtilsImpl implements JwtTokenUtils {
      */
     @Override
     public Boolean validateToken(String token, UserDetails userDetails) throws Exception {
-        AuthUser user = (AuthUser) userDetails;
+        AuthUserDetails user = (AuthUserDetails) userDetails;
         String username = getUsernameFromToken(token);
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }

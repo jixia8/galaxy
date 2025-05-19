@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SysPermission {
+    /**
+     * 和数据库对应menuId 相等
+     */
     private Long permissionId;
     private String permissionName;
     private String permissionUrl;

@@ -1,6 +1,9 @@
 package com.example.galaxy.security.filter;
 
 import com.example.galaxy.common.utils.JwtTokenUtils;
+import com.example.galaxy.common.utils.JwtTokenUtilsImpl;
+import com.example.galaxy.security.service.impl.AuthUserDetails;
+import com.example.galaxy.security.service.impl.AuthUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
@@ -23,15 +26,15 @@ import java.io.IOException;
 @Component
 public class SecurOncePerRequestFilter extends OncePerRequestFilter {
 
-    @Qualifier("authUserDetailsServiceImpl")
+
+    private final JwtTokenUtils jwtTokenUtils;
+    private final String header = "Authorization";
+    private final AuthUserDetailsServiceImpl userDetailsService;
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtTokenUtils jwtTokenUtil;
-
-    private String header = "Authorization";
-
+    public SecurOncePerRequestFilter(AuthUserDetailsServiceImpl authUserDetailsServiceImpl,  JwtTokenUtilsImpl jwtTokenUtilImpl) {
+        this.userDetailsService = authUserDetailsServiceImpl;
+        this.jwtTokenUtils = jwtTokenUtilImpl;
+    }
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -53,21 +56,22 @@ public class SecurOncePerRequestFilter extends OncePerRequestFilter {
             String token = headerToken.replace("Bearer", "").trim();
             boolean check = false;
             try {
-                check = this.jwtTokenUtil.isTokenExpired(token);
+                check = this.jwtTokenUtils.isTokenExpired(token);
             } catch (Exception e) {
                 new Throwable("令牌已过期，请重新登录。" + e.getMessage());
             }
             if (!check) {
                 //通过令牌获取用户名称
-                String username = jwtTokenUtil.getUsernameFromToken(token);
+                String username = jwtTokenUtils.getUsernameFromToken(token);
+                System.out.println(username+"Token");
                 //判断用户不为空，且SecurityContextHolder授权信息还是空的
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     //通过用户信息得到UserDetails
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    AuthUserDetails authuserDetails = userDetailsService.loadUserByUsername(username);
                     //验证令牌有效性
                     boolean validata = false;
                     try {
-                        validata = jwtTokenUtil.validateToken(token, userDetails);
+                        validata = jwtTokenUtils.validateToken(token, authuserDetails);
                     } catch (Exception e) {
                         new Throwable("验证token无效:" + e.getMessage());
                     }
@@ -75,9 +79,9 @@ public class SecurOncePerRequestFilter extends OncePerRequestFilter {
                         // 将用户信息存入 authentication，方便后续校验
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(
-                                        userDetails,
+                                        authuserDetails,
                                         null,
-                                        userDetails.getAuthorities()
+                                        authuserDetails.getAuthorities()
                                 );
                         //
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

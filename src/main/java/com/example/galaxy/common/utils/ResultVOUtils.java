@@ -8,6 +8,10 @@ public class ResultVOUtils {
         return new ResultVO<>(200, "操作成功", data);
     }
 
+    public static <T> ResultVO<T> success() {
+        return new ResultVO<>(200, "操作成功", null);
+    }
+
     public static <T> ResultVO<T> success(String message, T data) {
         return new ResultVO<>(200, message, data);
     }

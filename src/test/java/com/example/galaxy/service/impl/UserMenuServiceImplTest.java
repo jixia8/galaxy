@@ -19,10 +19,10 @@ import static org.mockito.Mockito.*;
 class UserMenuServiceImplTest {
 
     @Mock
-    private UserMenuMapper userMenuMapper;
+    private ISysUserService iSysUserService;
 
     @Mock
-    private ISysUserService iSysUserService;
+    private UserMenuMapper userMenuMapper;
 
     @InjectMocks
     private UserMenuServiceImpl userMenuService;
@@ -38,8 +38,10 @@ class UserMenuServiceImplTest {
 
         // 模拟权限
         SysPermission permission1 = new SysPermission();
+        permission1.setPermissionId(1L); // 设置权限ID
         permission1.setPermissionUrl("/menu1");
         SysPermission permission2 = new SysPermission();
+        permission2.setPermissionId(2L); // 设置权限ID
         permission2.setPermissionUrl("/menu2");
 
         when(iSysUserService.getPermissionsByUserAccount(userAccount))
@@ -47,10 +49,13 @@ class UserMenuServiceImplTest {
 
         // 模拟菜单
         UserMenu menu1 = new UserMenu();
+        menu1.setUserMenuId(1L); // 设置菜单ID
         menu1.setUserMenuPath("/menu1");
         UserMenu menu2 = new UserMenu();
+        menu2.setUserMenuId(2L); // 设置菜单ID
         menu2.setUserMenuPath("/menu2");
         UserMenu menu3 = new UserMenu();
+        menu3.setUserMenuId(3L); // 设置菜单ID
         menu3.setUserMenuPath("/menu3");
 
         when(userMenuMapper.getAllUserMenu()).thenReturn(Arrays.asList(menu1, menu2, menu3));

@@ -32,7 +32,7 @@ public class SecurLogoutSuccessHandler extends JSONAuthentication implements Log
             // 清理 Redis 中的 token
             redisUtils.delete(token);
         }
-
+        System.out.println("退出成功");
         // 返回退出成功的响应
         ResponseStructure<String> data = ResponseStructure.success("退出成功");
         super.WriteJSON(request, response, data);

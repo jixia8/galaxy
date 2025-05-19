@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 public class SysUser {
     private long userId;
     private String userName;
+    private String userAvatarUrl;
     @NotBlank(message = "账号不能为空")
     private String userAccount;
     @NotBlank(message = "密码不能为空")

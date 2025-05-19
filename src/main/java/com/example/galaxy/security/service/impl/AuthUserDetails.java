@@ -4,11 +4,12 @@ import com.example.galaxy.entity.SysUser;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class AuthUserDetails implements UserDetails {
     @Getter
     private final SysUser sysUser;
@@ -17,7 +18,6 @@ public class AuthUserDetails implements UserDetails {
     public AuthUserDetails(SysUser sysUser, List<Long> permissionIds) {
         this.sysUser = sysUser;
         this.permissionIds = permissionIds;
-        System.out.println("AuthUser"+sysUser.getUserAccount());
     }
 
     @Override
@@ -54,7 +54,6 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        System.out.println("AuthUser"+sysUser.getEnabled());
         return sysUser.getEnabled();
     }
 

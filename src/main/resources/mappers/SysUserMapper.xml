@@ -6,6 +6,7 @@
     <resultMap id="SysUserMap" type="com.example.galaxy.entity.SysUser">
         <id property="userId" column="user_id"/>
         <id property="userAccount" column="user_account"/>
+        <result property="userAvatarUrl" column="user_avatar_url"/>
         <result property="userPassword" column="user_password"/>
         <result property="userEmail" column="user_email"/>
         <result property="accountNonExpired" column="is_account_non_expired"/>
@@ -16,13 +17,13 @@
     </resultMap>
     <!--复用语句-->
     <sql id="insert_columns">
-        user_account, user_password, user_email, is_account_non_expired,
+        user_account,user_avatar_url, user_password, user_email, is_account_non_expired,
     is_account_non_locked, is_credentials_non_expired, is_enabled,
     user_name
     </sql>
     <!-- 复用对应值 -->
     <sql id="insert_values">
-        #{userAccount}, #{userPassword}, #{userEmail}, #{accountNonExpired},
+        #{userAccount},#{userAvatarUrl},#{userPassword}, #{userEmail}, #{accountNonExpired},
         #{accountNonLocked}, #{credentialsNonExpired}, #{enabled},
         #{userName}
     </sql>
@@ -67,6 +68,7 @@
         update sys_user
         <set>
             <if test="userAccount != null">user_account = #{userAccount},</if>
+            <if test="userAvatarUrl != null">user_avatar_url = #{userAvatarUrl},</if>
             <if test="userPassword != null">user_password = #{userPassword},</if>
             <if test="userEmail != null">user_email = #{userEmail},</if>
             <if test="accountNonExpired != null">is_account_non_expired = #{accountNonExpired},</if>
@@ -82,6 +84,7 @@
         update sys_user
         <set>
             <if test="userAccount != null">user_account = #{userAccount},</if>
+            <if test="userAvatarUrl != null">user_avatar_url = #{userAvatarUrl},</if>
             <if test="userPassword != null">user_password = #{userPassword},</if>
             <if test="userEmail != null">user_email = #{userEmail},</if>
             <if test="accountNonExpired != null">is_account_non_expired = #{accountNonExpired},</if>

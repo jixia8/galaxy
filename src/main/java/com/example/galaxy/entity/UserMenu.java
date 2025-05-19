@@ -8,6 +8,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserMenu {
+    /**
+     * 与对应的permissionId相等
+     * 与数据库对应menuId
+     */
     private long userMenuId;                // 菜单ID
     private String userMenuName;            // 菜单名称
     private String userMenuPath;            // 路由路径

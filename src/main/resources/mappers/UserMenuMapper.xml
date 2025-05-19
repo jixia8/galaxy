@@ -55,4 +55,10 @@
     <delete id="deleteUserMenuById" parameterType="long">
         DELETE FROM user_menu WHERE user_menu_id = #{userMenuId}
     </delete>
+
+    <select id="getMenusByPermissionIds" parameterType="long" resultMap="BaseResultMap">
+        SELECT *
+        FROM user_menu
+        WHERE user_menu_id = #{permissionId}
+    </select>
 </mapper>

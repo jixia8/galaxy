@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +42,10 @@ public class ISysUserServiceImpl implements ISysUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
+    public int updateUserByAccount(SysUser sysUser) {
+        return sysUserMapper.updateUserByAccountSelective(sysUser);
+    }
     @Override
     public boolean checkLogin(String account, String password) {
         SysUser sysUser = sysUserMapper.getUserByAccount(account);
@@ -75,16 +81,18 @@ public class ISysUserServiceImpl implements ISysUserService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public List<UserMenu> getUserMenus(String userAccount) {
-        List<String> userPermissions = getPermissionsByUserAccount(userAccount).stream()
-                .map(SysPermission::getPermissionUrl)
+        // 获取用户权限 ID 并转为 Set
+        List<Long> userPermissions = getPermissionsByUserAccount(userAccount).stream()
+                .map(SysPermission::getPermissionId)
                 .collect(Collectors.toList());
-        return userMenuMapper.getAllUserMenu().stream()
-                .filter(menu -> userPermissions.contains(menu.getUserMenuPath()))
+        // 在数据库中直接过滤出用户有权限的菜单
+        return userPermissions.stream()
+                .flatMap(permissionId -> userMenuMapper.getMenusByPermissionIds(permissionId).stream())
                 .collect(Collectors.toList());
     }
-
     @Override
     public String encodePassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);

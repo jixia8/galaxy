@@ -2,6 +2,8 @@ package com.example.galaxy.common.utils;
 
 import com.example.galaxy.VO.ResultVO;
 
+import javax.servlet.http.HttpServletResponse;
+
 public class ResultVOUtils {
 
     public static <T> ResultVO<T> success(T data) {
@@ -23,4 +25,5 @@ public class ResultVOUtils {
     public static <T> ResultVO<T> failed(int code, String message) {
         return new ResultVO<>(code, message, null);
     }
+
 }

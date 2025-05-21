@@ -27,5 +27,12 @@ public class SysUser {
     private Boolean accountNonLocked;	//账号是否未锁定（true 表示未被锁）
     private Boolean credentialsNonExpired;	//凭证是否未过期（true 表示密码有效）
     private Boolean enabled; //可用性
+    public SysUser(SysUserDTO sysUserDTO) {
+        this.userId = sysUserDTO.getUserId();
+        this.userName = sysUserDTO.getUserName();
+        this.userAvatarUrl = sysUserDTO.getUserAvatarUrl();
+        this.userAccount = sysUserDTO.getUserAccount();
+        this.userEmail = sysUserDTO.getUserEmail();
+    }
 //    private List<SysRole> userToRoles;
 }

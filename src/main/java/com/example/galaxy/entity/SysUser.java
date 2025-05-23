@@ -1,5 +1,7 @@
 package com.example.galaxy.entity;
 
+import com.example.galaxy.entity.DTO.RegisterDTO;
+import com.example.galaxy.entity.DTO.SysUserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +35,13 @@ public class SysUser {
         this.userAvatarUrl = sysUserDTO.getUserAvatarUrl();
         this.userAccount = sysUserDTO.getUserAccount();
         this.userEmail = sysUserDTO.getUserEmail();
+    }
+    public SysUser(RegisterDTO registerDTO){
+        this.userName = registerDTO.getUserName();
+        this.userAccount = registerDTO.getUserAccount();
+        this.userEmail = registerDTO.getUserEmail();
+        this.userPassword = registerDTO.getUserPassword();
+        this.userAvatarUrl =  registerDTO.getUserAvatarUrl();
     }
 //    private List<SysRole> userToRoles;
 }

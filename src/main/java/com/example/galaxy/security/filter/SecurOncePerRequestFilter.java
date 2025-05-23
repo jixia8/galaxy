@@ -63,7 +63,7 @@ public class SecurOncePerRequestFilter extends OncePerRequestFilter {
             if (!check) {
                 //通过令牌获取用户名称
                 String username = jwtTokenUtils.getUsernameFromToken(token);
-                System.out.println(username+"Token");
+//System.out.println("username = " + username);
                 //判断用户不为空，且SecurityContextHolder授权信息还是空的
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     //通过用户信息得到UserDetails

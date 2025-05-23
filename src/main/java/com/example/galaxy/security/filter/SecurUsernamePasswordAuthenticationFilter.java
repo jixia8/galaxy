@@ -4,6 +4,7 @@ import com.example.galaxy.service.inter.ISysUserService;
 import com.example.galaxy.security.handler.SecurAuthenticationFailureHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
+@Slf4j
 public class SecurUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Autowired
@@ -42,7 +43,7 @@ public class SecurUsernamePasswordAuthenticationFilter extends UsernamePasswordA
                     String username = authenticationBean.get(SPRING_SECURITY_FORM_USERNAME_KEY);
                     String password = authenticationBean.get(SPRING_SECURITY_FORM_PASSWORD_KEY);
                     //检测账号、密码是否存在
-//                    System.out.println("userpassword"+userService.checkLogin(username, password)+"login");
+//                    log.info("userpassword"+userService.checkLogin(username, password)+"login");
                     if (userService.checkLogin(username, password)) {
                         //将账号、密码装入UsernamePasswordAuthenticationToken中
                         authRequest = new UsernamePasswordAuthenticationToken(username, password);

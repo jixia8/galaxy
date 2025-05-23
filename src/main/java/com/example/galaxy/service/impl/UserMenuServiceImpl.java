@@ -6,6 +6,7 @@ import com.example.galaxy.entity.SysPermission;
 import com.example.galaxy.entity.UserMenu;
 import com.example.galaxy.mapper.UserMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class UserMenuServiceImpl implements UserMenuService {
     private final UserMenuMapper userMenuMapper;
     private final ISysUserService iSysUserService;
+    @Lazy
     @Autowired
     public UserMenuServiceImpl(UserMenuMapper userMenuMapper, ISysUserService iSysUserService) {
         this.userMenuMapper = userMenuMapper;
@@ -53,5 +55,9 @@ public class UserMenuServiceImpl implements UserMenuService {
     @Override
     public UserMenu getUserMenuById(long userMenuId) {
         return userMenuMapper.getUserMenuById(userMenuId);
+    }
+    @Override
+    public List<UserMenu> getMenusByPermissionIds(long permissionId){
+        return userMenuMapper.getMenusByPermissionIds(permissionId);
     }
 }

@@ -101,4 +101,11 @@
          select *
          from sys_user
     </select>
+
+    <!--是否存在用户-->
+    <select id="countUserByAccount" resultType="int" parameterType="string">
+        select count(*)
+        from sys_user
+        where user_account = #{userAccount}
+    </select>
 </mapper>

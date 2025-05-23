@@ -10,6 +10,9 @@ public class ResultVOUtils {
         return new ResultVO<>(200, "操作成功", data);
     }
 
+    public static <T> ResultVO<T> success(String message) {
+        return new ResultVO<>(200, message, null);
+    }
     public static <T> ResultVO<T> success() {
         return new ResultVO<>(200, "操作成功", null);
     }

@@ -40,21 +40,28 @@ public class AuthUserDetails implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
+        // return sysUser.getAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
         return true;
+        // return sysUser.getAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+        // return sysUser.getCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
         return sysUser.getEnabled();
+    }
+
+    public List<Long> getPermissionIds() {
+        return permissionIds;
     }
 
 }

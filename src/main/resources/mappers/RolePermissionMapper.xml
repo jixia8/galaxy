@@ -7,7 +7,7 @@
         <id property="roleId" column="role_id"/>
         <id property="permissionId" column="permission_id"/>
     </resultMap>
-    <select id="getPermissionIdByUserId"  parameterType="long" resultType="long">
+    <select id="getPermissionIdByRoleId"  parameterType="long" resultType="long">
         select permission_id
         from role_permission
         where role_id = #{roleId}

@@ -3,9 +3,11 @@ package com.example.galaxy.controller;
 import com.example.galaxy.VO.ResultVO;
 import com.example.galaxy.common.utils.ResultVOUtils;
 import com.example.galaxy.entity.SysUser;
-import com.example.galaxy.entity.SysUserDTO;
+import com.example.galaxy.entity.DTO.SysUserDTO;
 import com.example.galaxy.service.inter.ISysUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,18 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Base64;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/user/image")
 public class UserImageController {
-    private static final String IMAGE_PATH = "src/main/resources/userImages";
+    private final String IMAGE_PATH;
     private final ISysUserService iSysUserService;
 
     @Autowired
-    public UserImageController(ISysUserService iSysUserService) {
+    public UserImageController(ISysUserService iSysUserService,@Value("${upload.path}") String  IMAGE_PATH) {
         // 初始化目录
+        this.IMAGE_PATH = IMAGE_PATH;
         this.iSysUserService = iSysUserService;
         File dir = new File(IMAGE_PATH);
         if (!dir.exists() && !dir.mkdirs()) {
@@ -33,7 +35,7 @@ public class UserImageController {
     }
 
     @PostMapping("/upload")
-    public <T>ResultVO<T> uploadUserImage(@RequestBody SysUserDTO sysUserDTO, @RequestParam("file") MultipartFile file) throws IOException {
+    public <T> ResultVO<T> uploadUserImage(@RequestPart SysUserDTO sysUserDTO, @RequestParam("file") MultipartFile file) throws IOException {
         SysUser sysUser = new SysUser(sysUserDTO);
         // 验证文件是否为空
         if (file.isEmpty()) {
@@ -64,14 +66,13 @@ public class UserImageController {
         }
         // 更新用户头像路径
         sysUser.setUserAvatarUrl(destination.getAbsoluteFile().getName());
-        iSysUserService.updateUserByAccount(sysUser);
+        iSysUserService.updateUser(sysUser);
         return ResultVOUtils.success();
     }
 
     /**
      * 查看用户头像
      * @param filename 前端需要的文件名
-     *
      */
     @GetMapping("/view/{filename}")
     public void viewUserImage(@PathVariable String filename, HttpServletResponse response) throws IOException {
@@ -117,5 +118,4 @@ public class UserImageController {
             throw new RuntimeException("文件下载失败: " + e.getMessage());
         }
     }
-
 }

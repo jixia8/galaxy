@@ -1,5 +1,6 @@
-package com.example.galaxy.entity;
+package com.example.galaxy.entity.DTO;
 
+import com.example.galaxy.entity.SysUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

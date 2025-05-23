@@ -24,7 +24,7 @@ public class SecurLogoutSuccessHandler extends JSONAuthentication implements Log
     public void onLogoutSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
                                 Authentication authentication) throws IOException, ServletException {
-        System.out.println("退出成功");
+//        System.out.println("退出成功");
         // 返回退出成功的响应
         ResponseStructure<String> data = ResponseStructure.success("退出成功");
         super.WriteJSON(request, response, data);

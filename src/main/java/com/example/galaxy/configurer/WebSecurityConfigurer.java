@@ -62,7 +62,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
         //第1步：解决跨域问题。cors 预检请求放行,让Spring security 放行所有preflight request（cors 预检请求）
         http.authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-
         //第2步：让Security永远不会创建HttpSession，它不会使用HttpSession来获取SecurityContext
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().headers().cacheControl();

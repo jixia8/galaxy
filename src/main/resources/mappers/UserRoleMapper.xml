@@ -12,4 +12,15 @@
         from user_role
         where user_id = #{userId}
     </select>
+    <insert id="addUserRole">
+        INSERT INTO sys_user_role (user_id, role_id)
+        VALUES (#{userId}, #{roleId})
+    </insert>
+    <insert id="addUserRoles">
+        insert  into sys_user_role (user_id, role_id)
+        values
+            <foreach collection="roleIds" item="roleId" separator=",">
+                (#{userId}, #{roleId})
+            </foreach>
+    </insert>
 </mapper>

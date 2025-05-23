@@ -22,4 +22,6 @@ public interface SysUserMapper {
     public int updateUserByAccountSelective(SysUser user);
 
     public List<SysUser> getAllSysUser();
+
+    public int countUserByAccount(String account);
 }

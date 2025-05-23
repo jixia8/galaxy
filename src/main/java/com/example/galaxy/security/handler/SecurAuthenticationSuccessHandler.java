@@ -58,7 +58,6 @@ public class SecurAuthenticationSuccessHandler extends JSONAuthentication implem
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String redisKey = TOKEN_KEY + username;
         String token = Optional.ofNullable(redisUtils.get(redisKey)).map(Object::toString).orElse("");
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         if (token.isEmpty()) {
             log.info("初次登录，生成新 token...");
             token = jwtTokenUtils.generateToken(authUserDetails);
@@ -84,7 +83,6 @@ public class SecurAuthenticationSuccessHandler extends JSONAuthentication implem
         map.put("auth", authUserDetails.getAuthorities());
         map.put("menus", menus);
         map.put("token", token);
-
         ResponseStructure<Map<String, Object>> data = ResponseStructure.success(map);
         this.WriteJSON(request, response, data);
     }

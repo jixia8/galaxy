@@ -56,3 +56,13 @@ CREATE TABLE role_permission (
                                  FOREIGN KEY (role_id) REFERENCES sys_role(role_id),
                                  FOREIGN KEY (permission_id) REFERENCES sys_permission(permission_id)
 ) COMMENT='角色权限关联表';
+
+-- user_visit_record 表
+CREATE TABLE user_visit_record (
+                                   user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                   user_account VARCHAR(64) NOT NULL,
+                                   user_name VARCHAR(64) ,
+                                   visit_count INT NOT NULL DEFAULT 0,
+                                   record_date DATE NOT NULL,
+                                   UNIQUE KEY uk_username_date (usr_account, record_date)
+);

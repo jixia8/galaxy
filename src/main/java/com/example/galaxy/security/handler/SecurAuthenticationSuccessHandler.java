@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.example.galaxy.common.Constants.TOKEN_KEY;
-import static com.example.galaxy.common.Constants.VISIT_USER_KEY;
+import static com.example.galaxy.common.Constants.*;
 
 @Component
 @Slf4j
@@ -63,10 +62,13 @@ public class SecurAuthenticationSuccessHandler extends JSONAuthentication implem
             token = jwtTokenUtils.generateToken(authUserDetails);
             redisUtils.set(redisKey, token, 3600L * 11);
         }
-
+        /*
+         * 记录访问者信息，修改代码，实现每日热度排行
+         */
         // 记录访问者信息
-        redisUtils.sSetAndTime(VISIT_USER_KEY, 60 * 60 * 24, username + System.currentTimeMillis());
-
+ //       redisUtils.sSetAndTime(VISIT_USER_KEY, 60 * 60 * 24, username + System.currentTimeMillis());
+        redisUtils.hIncrement(USER_DAILY_KEY, username, 1); // 每次登录增加一次访问量
+        redisUtils.expire(USER_DAILY_KEY, 60 * 60 * 24);
         // 加载前端菜单
         List<UserMenu> menus;
         try {

@@ -9,6 +9,7 @@ import com.example.galaxy.entity.DTO.SysUserDTO;
 import com.example.galaxy.entity.SysRole;
 import com.example.galaxy.entity.SysUser;
 import com.example.galaxy.service.inter.ISysUserService;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,7 +27,7 @@ public class UserController {
     private final ISysUserService iSysUserService;
 
     @Autowired
-    public UserController(ISysUserService iSysUserService, SysUserDTO sysUserDTO) {
+    public UserController(ISysUserService iSysUserService) {
         this.iSysUserService = iSysUserService;
     }
     @PostMapping("/register")
@@ -47,7 +49,7 @@ public class UserController {
             return ResultVOUtils.failed("用户注册失败");
         }
     }
-    @PostMapping("/changeuser")
+    @PostMapping("/change-user")
     public <T> ResultVO<T> changeUser(SysUserDTO sysUserDTO) {
         SysUser sysUser = new SysUser(sysUserDTO);
         if(iSysUserService.updateUser(sysUser) == 1){
@@ -56,7 +58,7 @@ public class UserController {
             return ResultVOUtils.failed("用户信息修改失败");
         }
     }
-    @PostMapping("/changepassword")
+    @PostMapping("/change-password")
     public <T> ResultVO<T> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
         // 1. 获取当前登录用户
         SysUser currentUser = SecurityUtils.getCurrentUser();
@@ -98,8 +100,10 @@ public class UserController {
         if (currentUser == null || currentUser.getUserAccount() == null) {
             return ResultVOUtils.failed("找不到当前登录用户");
         }
-        List<String> permissions = Collections.singletonList(iSysUserService.getPermissionsByUserAccount(currentUser.getUserName()).stream()
-                .toString());
+        List<String> permissions = iSysUserService.getPermissionsByUserAccount(currentUser.getUserName())
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.toList());
         return ResultVOUtils.success(permissions);
     }
     /**
@@ -125,12 +129,23 @@ public class UserController {
      * @return 是否成功
      */
     @PostMapping("/assign-role")
-    public <T> ResultVO<T> assignRoleToUser(@RequestParam String userAccount, @RequestParam Long roleId) {
+    public ResultVO<String> assignRoleToUser(@RequestParam String userAccount, @RequestParam Long roleId) {
         boolean success = iSysUserService.assignRoleToUser(userAccount, roleId);
         if (success) {
             return ResultVOUtils.success("角色分配成功");
         } else {
             return ResultVOUtils.failed("角色分配失败");
         }
+    }
+    /**
+     * 分页查询用户列表
+     */
+    @GetMapping("/list")
+    public ResultVO<PageInfo<SysUser>> listUsers(
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String keyword) {
+        PageInfo<SysUser> pageInfo = iSysUserService.listUsers(pageNum, pageSize, keyword == null ? "" : keyword);
+        return ResultVOUtils.success(pageInfo);
     }
 }

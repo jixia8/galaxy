@@ -6,6 +6,9 @@ import com.example.galaxy.entity.SysUser;
 import com.example.galaxy.entity.UserMenu;
 import com.example.galaxy.mapper.SysUserMapper;
 import com.example.galaxy.service.inter.*;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -188,6 +191,13 @@ public class ISysUserServiceImpl implements ISysUserService {
         } catch (Exception e) {
             log.error("角色分配失败：用户 {}, 角色 {}", userAccount, roleId, e);
             return false;
+        }
+    }
+    @Override
+    public PageInfo<SysUser> listUsers(int pageNum, int pageSize, String keyword) {
+        try (Page<?> ignored = PageHelper.startPage(pageNum, pageSize)) {
+            List<SysUser> users = sysUserMapper.selectUsersByKeyword(keyword);
+            return new PageInfo<>(users);
         }
     }
 }

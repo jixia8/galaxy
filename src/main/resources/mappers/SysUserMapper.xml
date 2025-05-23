@@ -108,4 +108,15 @@
         from sys_user
         where user_account = #{userAccount}
     </select>
+
+    <select id="selectUsersByKeyword" resultMap="SysUserMap">
+        SELECT *
+        FROM sys_user
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (user_account LIKE CONCAT('%', #{keyword}, '%')
+                OR user_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -5,6 +5,7 @@ import com.example.galaxy.entity.SysPermission;
 import com.example.galaxy.entity.SysRole;
 import com.example.galaxy.entity.SysUser;
 import com.example.galaxy.entity.UserMenu;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Set;
@@ -103,4 +104,11 @@ public interface  ISysUserService {
      * @return 是否分配成功
      */
     boolean assignRoleToUser(String userAccount, Long roleId);
+    /**
+     * 按业获取用户
+     * @param offset 偏移量
+     * @param limit 限制数量
+     * @return 用户列表
+     */
+    PageInfo<SysUser> listUsers(int offset, int limit, String keyword);
 }

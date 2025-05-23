@@ -1,14 +1,15 @@
 package com.example.galaxy.common.utils;
 
+import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -48,6 +49,10 @@ public class RedisUtilsImpl implements RedisUtils {
      */
     @Override
     public boolean sSetAndTime(String key, long time, Object... values) {
+        if (!StringUtils.hasText(key) || values == null || values.length == 0) {
+            return false;
+        }
+        Logger logger = LoggerFactory.getLogger(RedisUtilsImpl.class);
         try {
             SetOperations<String, Object> setOps = redisTemplate.opsForSet();
             setOps.add(key, values);
@@ -56,11 +61,10 @@ public class RedisUtilsImpl implements RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis Set add with expire failed. key: {}, values: {}", key, values, e);
             return false;
         }
     }
-
     /**
      * 删除缓存
      */
@@ -77,5 +81,23 @@ public class RedisUtilsImpl implements RedisUtils {
             LoggerFactory.getLogger(RedisUtilsImpl.class).error("Failed to delete key: {}", key, e);
             return false;
         }
+    }
+    @Override
+    public Long hIncrement(String key, String field, long delta) {
+        return redisTemplate.opsForHash().increment(key, field, delta);
+    }
+    @Override
+    public Map<String, Object> getHash(String key) {
+        Map<Object, Object> rawMap = redisTemplate.opsForHash().entries(key);
+        Map<String, Object> result = new HashMap<>();
+        for (Map.Entry<Object, Object> entry : rawMap.entrySet()) {
+            result.put(entry.getKey().toString(), entry.getValue());
+        }
+        return result;
+    }
+
+    @Override
+    public void expire(String key, long seconds) {
+        redisTemplate.expire(key, seconds, TimeUnit.SECONDS);
     }
 }

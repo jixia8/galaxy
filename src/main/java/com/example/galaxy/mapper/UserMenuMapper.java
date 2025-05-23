@@ -16,4 +16,6 @@ public interface UserMenuMapper {
     int updateUserMenu(UserMenu userMenu);
     int deleteUserMenuById(Long userMenuId);
     List<UserMenu> getMenusByPermissionIds( Long permissionId);
+    // 新增：支持关键字搜索的分页查询
+    List<UserMenu> selectMenusByKeyword(@Param("keyword") String keyword);
 }

@@ -2,6 +2,7 @@ package com.example.galaxy.mapper;
 
 import com.example.galaxy.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface SysUserMapper {
     public List<SysUser> getAllSysUser();
 
     public int countUserByAccount(String account);
+
+    List<SysUser> selectUsersByKeyword(String keyword);
 }

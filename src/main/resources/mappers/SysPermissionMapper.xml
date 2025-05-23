@@ -47,4 +47,17 @@
         WHERE permission_id = #{permissionId}
     </delete>
 
+    <!--分页获取权限-->
+    <select id="selectByKeyword" resultType="com.example.galaxy.entity.SysPermission">
+        SELECT *
+        FROM sys_permission
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (permission_name LIKE CONCAT('%', #{keyword}, '%')
+                OR permission_code LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

@@ -5,6 +5,9 @@ import com.example.galaxy.service.inter.UserMenuService;
 import com.example.galaxy.entity.SysPermission;
 import com.example.galaxy.entity.UserMenu;
 import com.example.galaxy.mapper.UserMenuMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -59,5 +62,12 @@ public class UserMenuServiceImpl implements UserMenuService {
     @Override
     public List<UserMenu> getMenusByPermissionIds(long permissionId){
         return userMenuMapper.getMenusByPermissionIds(permissionId);
+    }
+    @Override
+    public PageInfo<UserMenu> getMenuPage(int pageNum, int pageSize, String keyword) {
+        try (Page<?> ignored = PageHelper.startPage(pageNum, pageSize)) {
+            List<UserMenu> menus = userMenuMapper.selectMenusByKeyword(keyword);
+            return new PageInfo<>(menus);
+        }
     }
 }

@@ -46,10 +46,10 @@
         <set>
             <if test="userMenuName != null">user_menu_name = #{userMenuName},</if>
             <if test="userMenuPath != null">user_menu_path = #{userMenuPath},</if>
-            <if test="permissionId != null">permission_id = #{permissionId} </if>
+            <if test="permissionId != null">permission_id = #{permissionId},</if>
             <if test="userMenuComponent != null">user_menu_component = #{userMenuComponent},</if>
             <if test="userMenuIcon != null">user_menu_icon = #{userMenuIcon},</if>
-            <if test="parentId != null">parent_id = #{parentId}</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
         </set>
         WHERE user_menu_id = #{userMenuId}
     </update>
@@ -62,5 +62,17 @@
         SELECT *
         FROM user_menu
         WHERE permission_id = #{permissionId}
+    </select>
+
+    <select id="selectMenusByKeyword" resultType="com.example.galaxy.entity.UserMenu">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM user_menu
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (user_menu_name LIKE CONCAT('%', #{keyword}, '%')
+                OR user_menu_path LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
     </select>
 </mapper>
